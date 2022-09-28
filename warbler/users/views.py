@@ -1,8 +1,8 @@
-
-from flask import Blueprint, render_template, redirect, request, flash, g, abort
-from .models import  db, User, DEFAULT_HEADER_IMAGE_URL, DEFAULT_IMAGE_URL
+from flask import (
+    Blueprint, render_template, redirect, request, flash, g, abort, session
+)
+from .models import db, User, DEFAULT_HEADER_IMAGE_URL, DEFAULT_IMAGE_URL
 from .forms import UserEditForm
-# from __init__.py import do_logout
 
 users = Blueprint(
     'users',
@@ -10,6 +10,16 @@ users = Blueprint(
     template_folder='templates',
     static_folder='static'
 )
+
+CURR_USER_KEY = "curr_user"
+
+
+def do_logout():
+    """Log out user."""
+
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
+
 
 @users.get('/users')
 def list_users():
@@ -29,7 +39,7 @@ def list_users():
     else:
         users = User.query.filter(User.username.like(f"%{search}%")).all()
 
-    return render_template('/index.html', users=users)
+    return render_template('users/index.html', users=users)
 
 
 @users.get('/users/<int:user_id>')
@@ -42,11 +52,7 @@ def show_user(user_id):
 
     user = User.query.get_or_404(user_id)
 
-    return render_template('/show.html', user=user)
-
-
-
-
+    return render_template('users/show.html', user=user)
 
 
 @users.route('/users/profile', methods=["GET", "POST"])
@@ -69,7 +75,7 @@ def edit_profile():
             user.email = form.email.data
             user.image_url = form.image_url.data or DEFAULT_IMAGE_URL
             user.header_image_url = (
-                    form.header_image_url.data or DEFAULT_HEADER_IMAGE_URL)
+                form.header_image_url.data or DEFAULT_HEADER_IMAGE_URL)
             user.bio = form.bio.data
 
             db.session.commit()
@@ -99,4 +105,3 @@ def delete_user():
     db.session.commit()
 
     return redirect("/signup")
-

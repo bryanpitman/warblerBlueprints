@@ -6,9 +6,6 @@ from sqlalchemy.exc import IntegrityError
 # from warbler import app
 
 
-
-
-
 CURR_USER_KEY = "curr_user"
 
 root = Blueprint(

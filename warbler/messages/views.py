@@ -12,16 +12,6 @@ messages = Blueprint(
 )
 
 
-@messages.before_request
-def add_user_to_g():
-    """If we're logged in, add curr user to Flask global."""
-
-    if CURR_USER_KEY in session:
-        g.user = User.query.get(session[CURR_USER_KEY])
-
-    else:
-        g.user = None
-
 @messages.route('/new', methods=["GET", "POST"])
 def add_message():
     """Add a message:
@@ -42,7 +32,7 @@ def add_message():
 
         return redirect(f"/users/{g.user.id}")
 
-    return render_template('/create.html', form=form)
+    return render_template('messages/create.html', form=form)
 
 
 @messages.get('/<int:message_id>')
@@ -54,7 +44,7 @@ def show_message(message_id):
         return redirect("/")
 
     msg = Message.query.get_or_404(message_id)
-    return render_template('/show.html', message=msg)
+    return render_template('messages/show.html', message=msg)
 
 
 @messages.post('/<int:message_id>/delete')

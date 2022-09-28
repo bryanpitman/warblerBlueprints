@@ -75,13 +75,6 @@ def do_logout():
         del session[CURR_USER_KEY]
 
 
-
-
-
-
-
-
-
 @app.errorhandler(404)
 def page_not_found(e):
     """404 NOT FOUND page."""
