@@ -9,7 +9,7 @@ import os
 from unittest import TestCase
 from sqlalchemy import exc
 
-from models import db, User, Message, Follows, Like
+from warbler.models import db, User, Message, Follows, Like
 
 # BEFORE we import our app, let's set an environmental variable
 # to use a different database for tests (we need to do this

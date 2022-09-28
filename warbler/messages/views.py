@@ -1,7 +1,7 @@
 
 from flask import Blueprint, render_template, redirect, flash, g
-from models import Message, db
-from forms import MessageForm
+from .models import Message, db
+from .forms import MessageForm
 
 messages = Blueprint(
     'messages',

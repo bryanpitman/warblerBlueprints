@@ -8,7 +8,7 @@
 import os
 from unittest import TestCase
 
-from models import db, Message, User
+from warbler.models import db, Message, User
 
 # BEFORE we import our app, let's set an environmental variable
 # to use a different database for tests (we need to do this

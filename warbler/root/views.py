@@ -1,7 +1,7 @@
 
 from flask import Blueprint, render_template, redirect, flash, g, session
-from models import User, Message, db
-from forms import LoginForm, UserAddForm
+from .models import User, Message, db
+from .forms import LoginForm, UserAddForm
 from sqlalchemy.exc import IntegrityError
 # from __init__.py import do_logout, login
 

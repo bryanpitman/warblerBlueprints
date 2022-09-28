@@ -10,7 +10,7 @@ from unittest import TestCase
 
 from bs4 import BeautifulSoup
 
-from models import Follows, Like, Message, User, db
+from warbler.models import Follows, Like, Message, User, db
 
 # BEFORE we import our app, let's set an environmental variable
 # to use a different database for tests (we need to do this

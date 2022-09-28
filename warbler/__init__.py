@@ -7,14 +7,16 @@ from flask import (
 from flask_debugtoolbar import DebugToolbarExtension
 
 
-from forms import (
-     CSRFProtection,
-)
-from models import (
-    db, connect_db, User, Message)
+from .forms import CSRFProtection
 
-from messages.views import messages
-from users.views import users
+from .models import connect_db, User
+
+from .messages.views import messages
+from .users.views import users
+from .follows.views import follows
+from .likes.views import likes
+from .root.views import root
+
 load_dotenv()
 
 CURR_USER_KEY = "curr_user"
@@ -35,6 +37,9 @@ connect_db(app)
 
 app.register_blueprint(messages, url_prefix="/messages")
 app.register_blueprint(users)
+app.register_blueprint(follows)
+app.register_blueprint(likes)
+app.register_blueprint(root)
 ##############################################################################
 # User signup/login/logout
 
