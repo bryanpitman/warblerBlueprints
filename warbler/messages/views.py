@@ -1,7 +1,8 @@
 
-from flask import Blueprint, render_template, redirect, flash, g
-from .models import Message, db
+from flask import Blueprint, render_template, redirect, flash, g, session
+from .models import Message, db, User
 from .forms import MessageForm
+CURR_USER_KEY = "curr_user"
 
 messages = Blueprint(
     'messages',
@@ -10,6 +11,16 @@ messages = Blueprint(
     static_folder='static'
 )
 
+
+@messages.before_request
+def add_user_to_g():
+    """If we're logged in, add curr user to Flask global."""
+
+    if CURR_USER_KEY in session:
+        g.user = User.query.get(session[CURR_USER_KEY])
+
+    else:
+        g.user = None
 
 @messages.route('/new', methods=["GET", "POST"])
 def add_message():

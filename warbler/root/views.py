@@ -1,9 +1,13 @@
 
 from flask import Blueprint, render_template, redirect, flash, g, session
 from .models import User, Message, db
-from .forms import LoginForm, UserAddForm
+from .forms import LoginForm, UserAddForm, CSRFProtection
 from sqlalchemy.exc import IntegrityError
-# from __init__.py import do_logout, login
+# from warbler import app
+
+
+
+
 
 CURR_USER_KEY = "curr_user"
 
@@ -13,6 +17,37 @@ root = Blueprint(
     template_folder='templates',
     static_folder='static'
 )
+
+@root.before_request
+def add_user_to_g():
+    """If we're logged in, add curr user to Flask global."""
+
+    if CURR_USER_KEY in session:
+        g.user = User.query.get(session[CURR_USER_KEY])
+
+    else:
+        g.user = None
+
+
+@root.before_request
+def add_csrf_only_form():
+    """Add a CSRF-only form so that every route can use it."""
+
+    g.csrf_form = CSRFProtection()
+
+
+def do_login(user):
+    """Log in user."""
+
+    session[CURR_USER_KEY] = user.id
+
+
+def do_logout():
+    """Log out user."""
+
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
+
 
 @root.route('/signup', methods=["GET", "POST"])
 def signup():
@@ -42,14 +77,14 @@ def signup():
 
         except IntegrityError:
             flash("Username already taken", 'danger')
-            return render_template('users/signup.html', form=form)
+            return render_template('/signup.html', form=form)
 
         do_login(user)
 
         return redirect("/")
 
     else:
-        return render_template('users/signup.html', form=form)
+        return render_template('/signup.html', form=form)
 
 
 @root.route('/login', methods=["GET", "POST"])
@@ -70,7 +105,7 @@ def login():
 
         flash("Invalid credentials.", 'danger')
 
-    return render_template('users/login.html', form=form)
+    return render_template('/login.html', form=form)
 
 
 @root.post('/logout')

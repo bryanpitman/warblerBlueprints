@@ -29,7 +29,7 @@ def list_users():
     else:
         users = User.query.filter(User.username.like(f"%{search}%")).all()
 
-    return render_template('users/index.html', users=users)
+    return render_template('/index.html', users=users)
 
 
 @users.get('/users/<int:user_id>')
@@ -42,7 +42,7 @@ def show_user(user_id):
 
     user = User.query.get_or_404(user_id)
 
-    return render_template('users/show.html', user=user)
+    return render_template('/show.html', user=user)
 
 
 
